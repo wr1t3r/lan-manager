@@ -1,1 +1,2 @@
-export const SET_CATEGORY = 'SET_CATEGORY';
+export const STEAM_LOGGED_IN = 'STEAM_LOGGED_IN';
+export const STEAM_LOGOUT = 'STEAM_LOGOUT';

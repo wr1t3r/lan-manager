@@ -1,45 +1,36 @@
 import {
-    SET_CATEGORY
+    STEAM_LOGGED_IN,
+    STEAM_LOGOUT
 } from "../actions";
-import Ajax from "../data/Ajax";
-import { HashRouter } from 'react-router-dom';
 
-export function userLoggedIn(username, token, id_user, sites, machines, userdata, payments, notifications) {
+export function loggedToSteam(steam_id) {
     return {
-        type: SET_CATEGORY,
-        payload: {
-            username: username,
-            sites: sites,
-            token: token,
-            id_user: id_user,
-            machines: machines,
-            userdata: userdata,
-            payments: payments,
-            notifications: notifications,
-        }
+        type: STEAM_LOGGED_IN,
+        payload: steam_id
+    };
+}
+export function logout() {
+    return {
+        type: STEAM_LOGOUT
     };
 }
 
-export function loginByToken() {
+/*
+export function loggedToSteam() {
     return function (dispatch, getState) {
         dispatch({
-            type: SET_CATEGORY
+            type: STEAM_AUTHENTICATE
         });
 
-        const user = JSON.parse(localStorage.getItem("user"));
-        const token = user ? user.token : "";
-
         const request = Ajax.call(
-            (Supplier.vars.live_url ? url.live : url.live_dev) + url.api_login,
+            "http://localhost:3000/authenticate",
             {
-                action: 'check_token',
-                token: token,
-                language: getState().inter.language,
-                id_suppliers: Supplier.vars.id_suppliers_displayed,
+                user: 'writerko',
             }
         );
 
         return request.then(response => {
+            console.log(response);
             if (response.data.success == "1") {
                 dispatch(userLoggedIn(
                     response.data.username,
@@ -60,3 +51,4 @@ export function loginByToken() {
         });
     };
 }
+*/

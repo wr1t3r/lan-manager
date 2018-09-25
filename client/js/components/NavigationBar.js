@@ -2,7 +2,6 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import PropTypes from 'prop-types';
 import {loginByToken} from '../actions/user';
 
 class NavigationBar extends React.Component {
@@ -14,33 +13,26 @@ class NavigationBar extends React.Component {
 
     render() {
         return (
-            <nav className="container align-center">
+            <nav className="align-center">
                 <div className="row">
                     <div className="col-xs-12">
                         {this.getMenuItem("Home", "home", "/")}
-                        {this.getMenuItem("Home", "home", "/")}
+                        {
+                            this.props.steam_id == ""
+                            ? ( <a href="/authenticate"><i className="fa fa-user"></i> Steam Login</a> )
+                            : ( this.getMenuItem("Log Out", "user", "/logout") )
+
+                        }
                     </div>
                 </div>
             </nav>
         );
     }
 }
-
-NavigationBar.contextTypes = {
-    router: PropTypes.object.isRequired
-};
-
-
 function mapStateToProps(state) {
     return {
-        username: state.user.username,
+        steam_id: state.user.steam_id,
     };
 }
 
-function matchDispatchToProps(dispatch){
-    return bindActionCreators({
-        loginByToken: loginByToken,
-    }, dispatch);
-}
-
-export default connect(mapStateToProps, matchDispatchToProps)(NavigationBar);
+export default connect(mapStateToProps, null)(NavigationBar);

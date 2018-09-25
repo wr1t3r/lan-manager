@@ -1,17 +1,23 @@
 import {
-    SET_CATEGORY,
+    STEAM_LOGGED_IN,
+    STEAM_LOGOUT,
 } from "../actions";
 
 const INITIAL_STATE = {
-    username: "",
+    steam_id: "",
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case SET_CATEGORY:
+        case STEAM_LOGGED_IN:
             return {
                 ...state,
-                site_machines: action.payload.site_machines
+                steam_id: action.payload
+            };
+        case STEAM_LOGOUT:
+            return {
+                ...state,
+                steam_id: ""
             };
         default:
             return state

@@ -85,8 +85,18 @@ input.error {
   Navigation
  */
 nav {
+  background: #000000;
+
   a {
+    color: #ffffff;
     padding: 10px 20px;
     display: inline-block;
+  }
+  a:visited, a:active, a:focus {
+    color: #ffffff;
+    text-decoration: none;
+  }
+  a:hover {
+    color: $bg_light;
   }
 }
