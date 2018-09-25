@@ -1,0 +1,25 @@
+export default {
+    // General settings
+    ratings: {
+        0: "",
+        1: "1",
+        2: "2",
+        3: "3",
+        4: "4",
+        5: "5",
+        6: "6",
+        7: "7",
+        8: "8",
+        9: "9",
+        10: "10",
+    },
+    mysqlDateFormat: "YYYY-MM-DD",
+    mysqlDateHourMinuteFormat: "YYYY-MM-DD HH:mm",
+    mysqlDateTimeFormat: "YYYY-MM-DD HH:mm:ss",
+    dateFormat: "DD.MM.YYYY",
+    dateFormatPickadate: "dd.mm.yyyy",
+    dateTimeFormat: "DD.MM.YYYY HH:mm:ss",
+    dateHourMinuteFormat: "DD.MM.YYYY HH:mm",
+    timeFormat: "HH:mm",
+    timeFrame: "H",
+};

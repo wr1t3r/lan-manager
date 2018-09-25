@@ -1,0 +1,92 @@
+$orange: #f7b71e;
+$danger: #a94442;
+$danger_light: #f2dede;
+$bg_light: #f2f2f2;
+
+body {
+  overflow-x: hidden;
+  background: $bg_light;
+}
+
+.loading {
+  padding: 5px;
+  text-align: center;
+}
+
+.align-right {
+  text-align: right;
+}
+.align-center {
+  text-align: center;
+}
+.justify {
+  text-align: justify;
+}
+.nopadding {
+  padding: 0;
+}
+.nomargin {
+  margin: 0;
+}
+.strong {
+  font-weight: bold;
+}
+a {
+  color: #000000;
+}
+a:hover {
+  color: #000000;
+  text-decoration: none;
+}
+.bg-success, .bg-danger, .bg-info {
+  padding: 5px 10px;
+  text-align: center;
+}
+.btn-fullwidth {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.red {
+  color: $danger;
+}
+.orange {
+  color: $orange;
+}
+legend {
+  font-size: 16px;
+}
+.img {
+  max-width: 100%;
+}
+input.error {
+    border: 1px solid $danger;
+}
+.error-field {
+  color: $danger;
+  padding: 5px;
+  margin: 0;
+  text-align: center;
+}
+.error-block {
+  background: $danger;
+  padding: 10px;
+
+  p {
+    color: #ffffff;
+    text-align: center;
+  }
+}
+.field-label {
+  line-height: 35px;
+}
+
+
+/**
+  Navigation
+ */
+nav {
+  a {
+    padding: 10px 20px;
+    display: inline-block;
+  }
+}
