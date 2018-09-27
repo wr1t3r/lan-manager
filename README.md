@@ -1,8 +1,6 @@
 # RED Majer - LAN PARTY MANAGER
 
 ### Future vision
-- keep user logged in, inside session, after page refresh, he is logged in
-- load user data from firebase onLoad
 - display all users
 - display logged in steam users
 - create tournament
@@ -13,6 +11,8 @@
 ### Done
 - login by steam
 - use firebase to store data
+- keep user logged in, inside session, after page refresh, he is logged in
+- load user data from firebase onLoad
 
 ### Additional functionality
 - chat

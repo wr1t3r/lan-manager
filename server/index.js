@@ -5,6 +5,9 @@ import webpackMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackConfig from '../webpack.config.dev.js';
 
+const http = require('http');
+const socketServer =require('socket.io');
+
 let steam = require('steam-login');
 let app = express();
 const cors = require("cors");
@@ -99,4 +102,24 @@ app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
-app.listen(80, () => console.log("Running on localhost:80"));
+var serve = http.createServer(app);
+var io = socketServer(serve);
+serve.listen(80,()=> {console.log("+++Gethyl Express Server with Socket Running!!!")});
+
+
+
+/***************************************************************************************** */
+/* Socket logic starts here																   */
+/***************************************************************************************** */
+const connections = [];
+io.on('connection', function (socket) {
+    console.log("Connected to Socket!!"+ socket.id)
+    connections.push(socket)
+    socket.on('disconnect', function(){
+        console.log('Disconnected - '+ socket.id);
+    });
+
+    socket.on('addUser',(user)=>{
+        console.log(user);
+    });
+});

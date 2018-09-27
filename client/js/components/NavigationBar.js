@@ -2,9 +2,30 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {loginByToken} from '../actions/user';
+import {loginByToken, userLoggedIn} from '../actions/user';
+import io from "socket.io-client"
+
+let socket;
 
 class NavigationBar extends React.Component {
+    constructor(props) {
+        super(props);
+
+        socket.on('userAdded',(res)=>{
+            console.log();
+        })
+    }
+
+    componentDidMount() {
+        socket = io.connect(process.env.LOCAL_IP_ADDRESS);
+
+        this.props.userLoggedIn(socket);
+    }
+
+    componentWillUnmount() {
+        socket.disconnect();
+    }
+
     getMenuItem (name, icon, link) {
         return (
             <Link to={link}><i className={"fa fa-" + icon}></i> {name}</Link>
@@ -35,4 +56,10 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, null)(NavigationBar);
+function matchDispatchToProps(dispatch){
+    return bindActionCreators({
+        userLoggedIn: userLoggedIn,
+    }, dispatch);
+}
+
+export default connect(mapStateToProps, matchDispatchToProps)(NavigationBar);

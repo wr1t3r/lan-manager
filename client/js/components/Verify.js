@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {loggedToSteam, loadSteamProfileFromFirebase} from "../actions/user";
+import {loggedToSteam, loadSteamProfileFromFirebase, userLoggedIn} from "../actions/user";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as qs from 'query-string';
 
+let socket;
+
 class Verify extends React.Component {
     componentDidMount() {
-        const parsed = qs.parse(location.href);
-        console.log(location.href, parsed); // ERROR HERE, NOT PARSING steamid CORRECTLY
+        var steam_id = location.href.split('steamid=')[1] ? location.href.split('steamid=')[1] : '';
 
-        if(parsed['steamid'] && parsed['steamid'] != "") {
-            const steam_id = parsed['steamid'].substr(parsed['steamid'].lastIndexOf('/') + 1);
+        if(steam_id && steam_id != "") {
             this.props.loggedToSteam(steam_id);
             this.props.loadSteamProfileFromFirebase();
             this.context.router.history.push("/");
@@ -45,6 +45,7 @@ function matchDispatchToProps(dispatch){
     return bindActionCreators({
         loggedToSteam: loggedToSteam,
         loadSteamProfileFromFirebase: loadSteamProfileFromFirebase,
+        userLoggedIn: userLoggedIn,
     }, dispatch);
 }
 

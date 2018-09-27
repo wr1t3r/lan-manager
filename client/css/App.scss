@@ -3,6 +3,9 @@ $danger: #a94442;
 $danger_light: #f2dede;
 $bg_light: #f2f2f2;
 
+$steam_bg_blue: #252934;
+$steam_bg_blue_light: #2f3c4f;
+
 body {
   overflow-x: hidden;
   background: $bg_light;
@@ -99,4 +102,26 @@ nav {
   a:hover {
     color: $bg_light;
   }
+}
+
+.steam-profile-button {
+  background: $steam_bg_blue;
+  color: #ffffff;
+  padding: 10px 15px;
+  margin-top: 10px;
+  display: inline-block;
+  width: 100%;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  img {
+    margin-right: 10px;
+    border: 1px solid $bg_light;
+  }
+}
+.steam-profile-button:hover {
+  color: #ffffff;
+  background: $steam_bg_blue_light;
 }

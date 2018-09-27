@@ -65,3 +65,10 @@ export function loadSteamProfileFromFirebaseFail(error) {
         payload: error
     };
 }
+
+
+export function userLoggedIn(socket) {
+    return function (dispatch, getState) {
+        socket.emit('addUser',getState().user);
+    };
+}
