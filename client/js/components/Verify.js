@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {loggedToSteam} from "../actions/user";
+import {loggedToSteam, loadSteamProfileFromFirebase} from "../actions/user";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as qs from 'query-string';
@@ -8,10 +8,12 @@ import * as qs from 'query-string';
 class Verify extends React.Component {
     componentDidMount() {
         const parsed = qs.parse(location.href);
+        console.log(location.href, parsed); // ERROR HERE, NOT PARSING steamid CORRECTLY
 
-        if(parsed['openid.identity'] && parsed['openid.identity'] != "") {
-            const steam_id = parsed['openid.identity'].substr(parsed['openid.identity'].lastIndexOf('/') + 1);
+        if(parsed['steamid'] && parsed['steamid'] != "") {
+            const steam_id = parsed['steamid'].substr(parsed['steamid'].lastIndexOf('/') + 1);
             this.props.loggedToSteam(steam_id);
+            this.props.loadSteamProfileFromFirebase();
             this.context.router.history.push("/");
         }
     }
@@ -42,6 +44,7 @@ function mapStateToProps(state) {
 function matchDispatchToProps(dispatch){
     return bindActionCreators({
         loggedToSteam: loggedToSteam,
+        loadSteamProfileFromFirebase: loadSteamProfileFromFirebase,
     }, dispatch);
 }
 

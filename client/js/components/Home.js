@@ -35,6 +35,7 @@ Home.contextTypes = {
 function mapStateToProps(state) {
     return {
         steam_id: state.user.steam_id,
+        steam_profile: state.user.profile,
     };
 }
 

@@ -1,4 +1,7 @@
+import webpack from "webpack";
+
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
     mode: "production",
@@ -8,6 +11,13 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js'
+    },
+    plugins: [
+        new Dotenv(),
+    ],
+    node: {
+        fs: 'empty',
+        child_process: 'empty',
     },
     module: {
         rules: [

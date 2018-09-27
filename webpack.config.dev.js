@@ -1,5 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
+const Dotenv = require('dotenv-webpack');
 
 export default {
     mode: "development",
@@ -12,9 +13,14 @@ export default {
         filename: 'bundle.js'
     },
     plugins: [
+        new Dotenv(),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
     ],
+    node: {
+        fs: 'empty',
+        child_process: 'empty',
+    },
     module: {
         rules: [
             {

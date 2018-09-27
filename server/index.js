@@ -5,7 +5,6 @@ import webpackMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackConfig from '../webpack.config.dev.js';
 
-const lan_ip = '192.168.5.124';
 let steam = require('steam-login');
 let app = express();
 const cors = require("cors");
@@ -14,8 +13,11 @@ let firebase = require('firebase');
 require('firebase/auth');
 require('firebase/database');
 
+require('dotenv').load();
+const lan_ip = process.env.LOCAL_IP_ADDRESS;
+const API_KEY = process.env.FIREBASE_API_KEY;
 const config = {
-    apiKey: 'AIzaSyC75MS4xWh1AAa_NLW6U49dPCo75WYOsD8',
+    apiKey: API_KEY,
     authDomain: 'http://'+lan_ip,
     databaseURL: 'https://lan-manager-firebase.firebaseio.com/',
     storageBucket: '',
@@ -27,7 +29,7 @@ firebase.initializeApp(config);
 app.use(require('express-session')({ resave: false, saveUninitialized: false, secret: 'B1923D96E9AD134F9F54A5067A2D0797' }));
 app.use(steam.middleware({
     realm: 'http://'+lan_ip,
-    verify: 'http://'+lan_ip+'/#verify',
+    verify: 'http://'+lan_ip+'/verify',
     apiKey: 'B1923D96E9AD134F9F54A5067A2D0797'}
 ));
 
@@ -70,13 +72,12 @@ app.get('/firebase', function(req, res) {
         console.log("eroror", error);
     });
     */
-    res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 app.get('/authenticate', steam.authenticate(), function(req, res) {
     res.redirect('/');
 });
 
-app.get('/#verify', steam.verify(), function(req, res) {
+app.get('/verify', steam.verify(), function(req, res) {
     // Add/Update firebase database
     if(req.user.steamid) {
         const usersRef = firebase.database().ref("users");
@@ -85,7 +86,8 @@ app.get('/#verify', steam.verify(), function(req, res) {
         });
     }
 
-    res.sendFile(path.join(__dirname, '../dist/index.html'));
+    res.redirect('/#/verify?steamid=' + req.user.steamid);
+    //res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 app.get('/logout', steam.enforceLogin('/'), function(req, res) {
