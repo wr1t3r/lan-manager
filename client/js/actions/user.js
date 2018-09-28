@@ -16,13 +16,16 @@ export function loggedToSteam(steam_id) {
         payload: steam_id
     };
 }
-export function logout() {
-    return {
-        type: STEAM_LOGOUT
+export function logout(socket) {
+    return function (dispatch, getState) {
+        dispatch({
+            type: STEAM_LOGOUT
+        });
+        socket.emit('removeUser');
     };
 }
 
-export function loadSteamProfileFromFirebase() {
+export function loadSteamProfileFromFirebase(socket) {
     return function (dispatch, getState) {
 
         const lan_ip = process.env.LOCAL_IP_ADDRESS;
@@ -46,17 +49,24 @@ export function loadSteamProfileFromFirebase() {
         const usersRef = database.ref("users/" + getState().user.steam_id);
         let request = usersRef.once("value");
         return request.then(snap => {
-            dispatch(loadSteamProfileFromFirebaseSuccess( snap.val() ));
+            if(snap.val()) {
+                dispatch(loadSteamProfileFromFirebaseSuccess(snap.val(), socket));
+            } else {
+                dispatch(logout(socket));
+            }
         }).catch(error => {
             dispatch(loadSteamProfileFromFirebaseFail( error ));
         });
     };
 }
 
-export function loadSteamProfileFromFirebaseSuccess(profile) {
-    return {
-        type: STEAM_LOAD_FROM_FIREBASE_SUCCESS,
-        payload: profile
+export function loadSteamProfileFromFirebaseSuccess(profile, socket) {
+    return function (dispatch, getState) {
+        dispatch({
+            type: STEAM_LOAD_FROM_FIREBASE_SUCCESS,
+            payload: profile
+        });
+        socket.emit('addUser',JSON.parse( JSON.stringify( getState().user ) ));
     };
 }
 export function loadSteamProfileFromFirebaseFail(error) {

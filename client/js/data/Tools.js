@@ -76,5 +76,9 @@ export default {
             console.log('Error', error.message);
         }
         console.log(error.config);
+    },
+
+    getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 };

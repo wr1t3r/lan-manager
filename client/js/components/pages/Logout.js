@@ -1,11 +1,11 @@
 import React from 'react';
-import {logout} from "../actions/user";
+import {logout} from "../../actions/user";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
 class Logout extends React.Component {
     componentDidMount() {
-        this.props.logout();
+        this.props.logout(this.props.socket);
     }
 
     render() {
@@ -13,7 +13,7 @@ class Logout extends React.Component {
             <div className="container">
                 <div className="row">
                     <div className="col-xs-12">
-                        <p className="bg-success">You are Logged Out</p>
+                        <p className="bg-success">Bol si odlhásený.</p>
                     </div>
                 </div>
             </div>

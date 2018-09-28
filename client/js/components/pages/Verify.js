@@ -1,19 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {loggedToSteam, loadSteamProfileFromFirebase, userLoggedIn} from "../actions/user";
+import {loggedToSteam, loadSteamProfileFromFirebase, userLoggedIn} from "../../actions/user";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import * as qs from 'query-string';
-
-let socket;
 
 class Verify extends React.Component {
     componentDidMount() {
-        var steam_id = location.href.split('steamid=')[1] ? location.href.split('steamid=')[1] : '';
+        let steam_id = location.href.split('steamid=')[1] ? location.href.split('steamid=')[1] : '';
 
         if(steam_id && steam_id != "") {
             this.props.loggedToSteam(steam_id);
-            this.props.loadSteamProfileFromFirebase();
+            this.props.loadSteamProfileFromFirebase(this.props.socket);
             this.context.router.history.push("/");
         }
     }
@@ -23,7 +20,7 @@ class Verify extends React.Component {
             <div className="container">
                 <div className="row">
                     <div className="col-xs-12">
-                        <p className="bg-danger">Failed to login, please try again.</p>
+                        <p className="bg-danger">Nepodarilo sa prihlásiť, skús znova.</p>
                     </div>
                 </div>
             </div>

@@ -3,27 +3,20 @@ import {Link} from 'react-router-dom';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {loginByToken, userLoggedIn} from '../actions/user';
-import io from "socket.io-client"
-
-let socket;
+import {updateUsers} from "../actions/users";
+import Constants from "../data/Constants";
 
 class NavigationBar extends React.Component {
     constructor(props) {
         super(props);
-
-        socket.on('userAdded',(res)=>{
-            console.log();
-        })
     }
 
     componentDidMount() {
-        socket = io.connect(process.env.LOCAL_IP_ADDRESS);
+        this.props.userLoggedIn(this.props.socket);
 
-        this.props.userLoggedIn(socket);
-    }
-
-    componentWillUnmount() {
-        socket.disconnect();
+        this.props.socket.on('connectedUsers',(data)=>{
+            this.props.updateUsers(data.connected_users);
+        })
     }
 
     getMenuItem (name, icon, link) {
@@ -37,11 +30,21 @@ class NavigationBar extends React.Component {
             <nav className="align-center">
                 <div className="row">
                     <div className="col-xs-12">
-                        {this.getMenuItem("Home", "home", "/")}
+                        {this.getMenuItem("Domov", "home", "/")}
                         {
                             this.props.steam_id == ""
-                            ? ( <a href="/authenticate"><i className="fa fa-user"></i> Steam Login</a> )
-                            : ( this.getMenuItem("Log Out", "user", "/logout") )
+                            ? ( <a href="/authenticate"><i className="fa fa-user"></i> Steam Prihlásenie</a> )
+                            : ( this.getMenuItem("Odhlásiť", "user", "/logout") )
+
+                        }
+                        {
+                            this.props.steam_id != "" &&
+                                ( <a href={this.props.steam_profile.profile} target="_blank" className="steam-logged-btn"><i className="fa fa-steam"></i> Môj steam profil</a> )
+
+                        }
+                        {
+                            this.props.steam_id == Constants.admin_steam_id &&
+                                ( this.getMenuItem("Turnaj", "gears", "/admin") )
 
                         }
                     </div>
@@ -53,12 +56,14 @@ class NavigationBar extends React.Component {
 function mapStateToProps(state) {
     return {
         steam_id: state.user.steam_id,
+        steam_profile: state.user.profile,
     };
 }
 
 function matchDispatchToProps(dispatch){
     return bindActionCreators({
         userLoggedIn: userLoggedIn,
+        updateUsers: updateUsers,
     }, dispatch);
 }
 

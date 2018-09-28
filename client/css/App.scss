@@ -1,14 +1,20 @@
 $orange: #f7b71e;
 $danger: #a94442;
+$success: #dff0d8;
 $danger_light: #f2dede;
 $bg_light: #f2f2f2;
 
 $steam_bg_blue: #252934;
 $steam_bg_blue_light: #2f3c4f;
+$steam_dark_gray: #16191c;
+$steam_light_gray: #353b41;
+
+$section_bg: #374757;
 
 body {
   overflow-x: hidden;
-  background: $bg_light;
+  background: $steam_dark_gray;
+  color: #ffffff;
 }
 
 .loading {
@@ -82,13 +88,23 @@ input.error {
 .field-label {
   line-height: 35px;
 }
+.section {
+  background: $section_bg;
+  margin: 10px 0;
+  padding: 5px 20px;
+
+  h2 {
+    background: $steam_bg_blue;
+    padding: 10px 0;
+  }
+}
 
 
 /**
   Navigation
  */
 nav {
-  background: #000000;
+  background: $steam_light_gray;
 
   a {
     color: #ffffff;
@@ -101,16 +117,31 @@ nav {
   }
   a:hover {
     color: $bg_light;
+    background: $steam_bg_blue_light;
+  }
+  a.steam-logged-btn {
+    color: $success;
+
+    .fa {
+      color: #ffffff;
+    }
   }
 }
 
+.users-panel {
+  margin-top: 10px;
+
+  .steam-profile-button {
+    width: 100%;
+  }
+}
 .steam-profile-button {
-  background: $steam_bg_blue;
+  background: $steam_light_gray;
   color: #ffffff;
   padding: 10px 15px;
   margin-top: 10px;
+  margin-right: 10px;
   display: inline-block;
-  width: 100%;
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -124,4 +155,39 @@ nav {
 .steam-profile-button:hover {
   color: #ffffff;
   background: $steam_bg_blue_light;
+}
+.steam-profile-button:visited, .steam-profile-button:active, .steam-profile-button:focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.steam-profile-button.selected {
+  background: $bg_light;
+  color: $steam_dark_gray;
+}
+
+
+/**
+  Admin
+ */
+.admin {
+
+}
+
+/**
+  Teams
+ */
+.team {
+  background: $steam_bg_blue;
+  padding: 5px 10px;
+
+  .team-name {
+    background: $steam_bg_blue_light;
+    padding: 10px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .steam-profile-button {
+    width: 100%;
+  }
 }

@@ -85,7 +85,7 @@ app.get('/verify', steam.verify(), function(req, res) {
     if(req.user.steamid) {
         const usersRef = firebase.database().ref("users");
         usersRef.update({
-            [req.user.steamid]: req.user
+            [req.user.steamid]: JSON.parse( JSON.stringify( req.user ) )
         });
     }
 
@@ -102,8 +102,8 @@ app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
-var serve = http.createServer(app);
-var io = socketServer(serve);
+let serve = http.createServer(app);
+let io = socketServer(serve);
 serve.listen(80,()=> {console.log("+++Gethyl Express Server with Socket Running!!!")});
 
 
@@ -111,15 +111,41 @@ serve.listen(80,()=> {console.log("+++Gethyl Express Server with Socket Running!
 /***************************************************************************************** */
 /* Socket logic starts here																   */
 /***************************************************************************************** */
-const connections = [];
+const connected_users = {};
 io.on('connection', function (socket) {
-    console.log("Connected to Socket!!"+ socket.id)
-    connections.push(socket)
+
     socket.on('disconnect', function(){
-        console.log('Disconnected - '+ socket.id);
+        delete connected_users[socket.id];
+        io.sockets.emit('connectedUsers', { connected_users: connected_users });
+    });
+    socket.on('removeUser', function(){
+        delete connected_users[socket.id];
+        io.sockets.emit('connectedUsers', { connected_users: connected_users });
     });
 
     socket.on('addUser',(user)=>{
-        console.log(user);
+        if(user.steam_id != '') {
+            if(!userExists(user.steam_id)) {
+                connected_users[socket.id] = {
+                    steam_id: user.steam_id,
+                    link: user.profile.profile,
+                    username: user.profile.username,
+                    avatar_link: user.profile.avatar.small,
+                };
+            }
+            io.sockets.emit('connectedUsers', {connected_users: connected_users});
+        }
     });
 });
+
+let userExists = (steam_id) =>{
+    let userExist = false;
+
+    Object.keys(connected_users).forEach(function(element) {
+        if(steam_id == connected_users[element].steam_id) {
+            userExist = true;
+        }
+    });
+
+    return userExist;
+};
