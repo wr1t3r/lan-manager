@@ -1,6 +1,7 @@
 import {
     GENERATE_TEAMS,
-    DELETE_GENERATE_TEAMS
+    DELETE_GENERATE_TEAMS,
+    SET_GENERATED_TEAMS
 } from "../actions";
 import TeamGenerator from '../models/TeamGenerator';
 
@@ -22,6 +23,11 @@ const teamsReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 current_generated_teams: INITIAL_STATE.current_generated_teams,
+            };
+        case SET_GENERATED_TEAMS:
+            return {
+                ...state,
+                current_generated_teams: action.payload.teams,
             };
         default:
             return state

@@ -3,6 +3,8 @@ import {Link} from 'react-router-dom';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {loginByToken, userLoggedIn} from '../actions/user';
+import {setGeneratedTeams} from '../actions/teams';
+import {setTournament} from '../actions/tournament';
 import {updateUsers} from "../actions/users";
 import Constants from "../data/Constants";
 
@@ -16,7 +18,15 @@ class NavigationBar extends React.Component {
 
         this.props.socket.on('connectedUsers',(data)=>{
             this.props.updateUsers(data.connected_users);
-        })
+        });
+
+        this.props.socket.on('generateTeams',(data)=>{
+            this.props.setGeneratedTeams(data.teams);
+        });
+
+        this.props.socket.on('generateTournament',(data)=>{
+            this.props.setTournament(data.tournament);
+        });
     }
 
     getMenuItem (name, icon, link) {
@@ -64,6 +74,8 @@ function matchDispatchToProps(dispatch){
     return bindActionCreators({
         userLoggedIn: userLoggedIn,
         updateUsers: updateUsers,
+        setGeneratedTeams: setGeneratedTeams,
+        setTournament: setTournament,
     }, dispatch);
 }
 

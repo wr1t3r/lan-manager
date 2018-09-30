@@ -136,6 +136,14 @@ io.on('connection', function (socket) {
             io.sockets.emit('connectedUsers', {connected_users: connected_users});
         }
     });
+
+    socket.on('generateTeams',(teams)=>{
+        io.sockets.emit('generateTeams', {teams: teams});
+    });
+
+    socket.on('generateTournament',(tournament)=>{
+        io.sockets.emit('generateTournament', {tournament: tournament});
+    });
 });
 
 let userExists = (steam_id) =>{

@@ -1,19 +1,34 @@
 import {
     GENERATE_TEAMS,
     DELETE_GENERATE_TEAMS,
+    SET_GENERATED_TEAMS,
 } from "../actions";
 
-export function generateTeams(players, num_players) {
+export function generateTeams(socket, players, num_players) {
+    return function (dispatch, getState) {
+        dispatch({
+            type: GENERATE_TEAMS,
+            payload: {
+                players: players,
+                num_players: num_players,
+            }
+        });
+        socket.emit('generateTeams',JSON.parse( JSON.stringify( getState().teams.current_generated_teams ) ));
+    };
+}
+export function setGeneratedTeams(teams) {
     return {
-        type: GENERATE_TEAMS,
+        type: SET_GENERATED_TEAMS,
         payload: {
-            players: players,
-            num_players: num_players,
+            teams: teams
         }
     };
 }
-export function deleteGeneratedTeams() {
-    return {
-        type: DELETE_GENERATE_TEAMS,
+export function deleteGeneratedTeams(socket) {
+    return function (dispatch) {
+        dispatch({
+            type: DELETE_GENERATE_TEAMS,
+        });
+        socket.emit('generateTeams',[]);
     };
 }
