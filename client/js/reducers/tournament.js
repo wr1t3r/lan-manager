@@ -12,7 +12,7 @@ const INITIAL_STATE = {
 const teamsReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case GENERATE_TOURNAMENT:
-            let tg = new TournamentGenerator(action.payload.teams, action.payload.type);
+            let tg = new TournamentGenerator(JSON.parse(JSON.stringify(action.payload.teams)), action.payload.type, action.payload.num_groups);
             let random_tournament = tg.getTournament();
 
             return {

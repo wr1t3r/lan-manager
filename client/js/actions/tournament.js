@@ -4,12 +4,13 @@ import {
     SET_TOURNAMENT,
 } from "../actions";
 
-export function generateTournament(socket, type) {
+export function generateTournament(socket, type, num_groups) {
     return function (dispatch, getState) {
         dispatch({
             type: GENERATE_TOURNAMENT,
             payload: {
                 type: type,
+                num_groups: num_groups,
                 teams: getState().teams.current_generated_teams
             }
         });

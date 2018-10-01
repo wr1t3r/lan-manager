@@ -17,7 +17,8 @@ class Admin extends React.Component {
         this.state = {
             selected_players: {},
             num_players_per_team: 1,
-            tournament_type: Tournament.TYPE_FREE_FOR_ALL,
+            tournament_type: Tournament.TYPE_FULL,
+            num_groups: 2,
         };
 
         this.clickUser = this.clickUser.bind(this);
@@ -68,7 +69,7 @@ class Admin extends React.Component {
         e.preventDefault();
 
         if(this.props.random_teams.length >= 1) {
-            this.props.generateTournament(this.props.socket, this.state.tournament_type);
+            this.props.generateTournament(this.props.socket, this.state.tournament_type, this.state.num_groups);
         } else {
             alert('Musí byť aspoň jeden tým.');
         }
@@ -87,6 +88,9 @@ class Admin extends React.Component {
         );
         const nums_players = map([1,2,3,4,5,6,7,8,9,10], (num_player, key) =>
             <option value={num_player} key={key}>Hráčov v teame: {num_player}</option>
+        );
+        const num_groups = map([1,2,3,4,5,6,7,8,9,10], (num_group, key) =>
+            <option value={num_group} key={key}>Počet skupín: {num_group}</option>
         );
         const tournament_types = map(Tournament.getTournamentTypes(), (tournamentType, key) =>
             <option value={tournamentType.id} key={tournamentType.id}>{tournamentType.name}</option>
@@ -139,6 +143,15 @@ class Admin extends React.Component {
                                          option_values={tournament_types}
                                 />
                             <br/>
+                            { this.state.tournament_type == Tournament.TYPE_FULL && (
+                                <SelectAddon id="num_groups"
+                                             text="Počet skupín"
+                                             icon="angle-double-right"
+                                             property={this.state.num_groups}
+                                             onChange={this.onChange}
+                                             option_values={num_groups}
+                                    />
+                            )}
                             <a href="#" className="btn btn-warning" onClick={this.generateTournament}><i className="fa fa-plus" /> Generovať</a>&nbsp;&nbsp;&nbsp;
                             <a href="#" className="btn btn-danger" onClick={this.deleteTournament}><i className="fa fa-minus" /> Vymazať Generované</a>&nbsp;&nbsp;&nbsp;
                             <a href="#" className="btn btn-success"><i className="fa fa-save" /> Uložiť turnaj</a><br/><br/>
