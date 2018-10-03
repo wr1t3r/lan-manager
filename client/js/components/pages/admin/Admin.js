@@ -8,8 +8,10 @@ import SteamProfileButton from '../../parts/SteamProfileButton';
 import {generateTeams, deleteGeneratedTeams} from "../../../actions/teams";
 import {generateTournament, deleteGeneratedTournament} from "../../../actions/tournament";
 import SelectAddon from '../../form/SelectAddon';
+import TextAddon from '../../form/TextAddon';
 import Team from '../../parts/Team';
 import Tournament from '../../../data/Tournament';
+import TournamentHolder from '../../parts/TournamentHolder';
 
 class Admin extends React.Component {
     constructor(props) {
@@ -17,8 +19,10 @@ class Admin extends React.Component {
         this.state = {
             selected_players: {},
             num_players_per_team: 1,
-            tournament_type: Tournament.TYPE_FULL,
-            num_groups: 2,
+            tournament_type: Tournament.TYPE_FREE_FOR_ALL,
+            num_groups: 1,
+            num_spider: 4,
+            tournament_name: "",
         };
 
         this.clickUser = this.clickUser.bind(this);
@@ -27,6 +31,10 @@ class Admin extends React.Component {
         this.deleteTeams = this.deleteTeams.bind(this);
         this.deleteTournament = this.deleteTournament.bind(this);
         this.generateTournament = this.generateTournament.bind(this);
+    }
+
+    componentDidMount() {
+
     }
 
     onChange(e) {
@@ -53,11 +61,11 @@ class Admin extends React.Component {
     generateTeams(e) {
         e.preventDefault();
 
-        if(Object.keys(this.state.selected_players).length >= 2) {
+        //if(Object.keys(this.state.selected_players).length >= 2) {
             this.props.generateTeams(this.props.socket, this.state.selected_players, this.state.num_players_per_team);
-        } else {
-            alert('Vyber aspoň 2 hráčov.');
-        }
+        //} else {
+        //    alert('Vyber aspoň 2 hráčov.');
+        //}
     }
 
     deleteTournament(e) {
@@ -68,11 +76,11 @@ class Admin extends React.Component {
     generateTournament(e) {
         e.preventDefault();
 
-        if(this.props.random_teams.length >= 1) {
-            this.props.generateTournament(this.props.socket, this.state.tournament_type, this.state.num_groups);
-        } else {
-            alert('Musí byť aspoň jeden tým.');
-        }
+        //if(this.props.random_teams.length >= 1) {
+            this.props.generateTournament(this.props.socket, this.state.tournament_type, this.state.num_groups, this.state.tournament_name);
+        //} else {
+            //alert('Musí byť aspoň jeden tým.');
+        //}
     }
 
     render() {
@@ -91,6 +99,9 @@ class Admin extends React.Component {
         );
         const num_groups = map([1,2,3,4,5,6,7,8,9,10], (num_group, key) =>
             <option value={num_group} key={key}>Počet skupín: {num_group}</option>
+        );
+        const num_spider = map([4,8,16], (num_group, key) =>
+            <option value={num_group} key={key}>Pavúk: {num_group}</option>
         );
         const tournament_types = map(Tournament.getTournamentTypes(), (tournamentType, key) =>
             <option value={tournamentType.id} key={tournamentType.id}>{tournamentType.name}</option>
@@ -135,28 +146,42 @@ class Admin extends React.Component {
 
 
                         <div className="section">
-                            <h2 className="align-center">Turnaj</h2>
+                            <h2 className="align-center">Generátor Turnaj</h2>
+                            <TextAddon id="tournament_name"
+                                       text="Meno Turnaja"
+                                       icon="angle-double-right"
+                                       onChange={this.onChange} />
                             <SelectAddon id="tournament_type"
                                          text="Typ turnaja"
                                          icon="angle-double-right"
                                          onChange={this.onChange}
-                                         option_values={tournament_types}
-                                />
-                            <br/>
+                                         option_values={tournament_types} />
                             { this.state.tournament_type == Tournament.TYPE_FULL && (
-                                <SelectAddon id="num_groups"
-                                             text="Počet skupín"
-                                             icon="angle-double-right"
-                                             property={this.state.num_groups}
-                                             onChange={this.onChange}
-                                             option_values={num_groups}
-                                    />
+                                <div>
+                                    <SelectAddon id="num_groups"
+                                                 text="Počet skupín"
+                                                 icon="angle-double-right"
+                                                 property={this.state.num_groups}
+                                                 onChange={this.onChange}
+                                                 option_values={num_groups} />
+                                    <SelectAddon id="num_spider"
+                                                 text="Začiatočný počet pavúka"
+                                                 icon="angle-double-right"
+                                                 property={this.state.num_spider}
+                                                 onChange={this.onChange}
+                                                 option_values={num_spider} />
+                                </div>
                             )}
-                            <a href="#" className="btn btn-warning" onClick={this.generateTournament}><i className="fa fa-plus" /> Generovať</a>&nbsp;&nbsp;&nbsp;
-                            <a href="#" className="btn btn-danger" onClick={this.deleteTournament}><i className="fa fa-minus" /> Vymazať Generované</a>&nbsp;&nbsp;&nbsp;
-                            <a href="#" className="btn btn-success"><i className="fa fa-save" /> Uložiť turnaj</a><br/><br/>
-                            <a href="#" className="btn btn-primary"><i className="fa fa-plus" /> Ukončiť základnú časť</a>&nbsp;&nbsp;&nbsp;
-                            <a href="#" className="btn btn-danger"><i className="fa fa-check" /> Ukončiť turnaj</a>&nbsp;&nbsp;&nbsp;
+                            <hr />
+                            <a href="#" className="btn btn-success" onClick={this.generateTournament}><i className="fa fa-gear" /> Generovať</a>&nbsp;&nbsp;&nbsp;
+                            <a href="#" className="btn btn-danger" onClick={this.deleteTournament}><i className="fa fa-trash" /> Vymazať Generované</a>&nbsp;&nbsp;&nbsp;
+                            <a href="#" className="btn btn-warning"><i className="fa fa-save" /> Uložiť do DB</a>&nbsp;&nbsp;&nbsp;
+
+                            <hr/>
+
+                            { this.props.current_generated_tournament && (<TournamentHolder stage={1}
+                                                                                            matches={this.props.current_generated_tournament.matches}
+                                                                                            tournament_type={this.props.current_generated_tournament.type} />)}
                         </div>
                     </div>
                     <div className="col-sm-4">
@@ -179,6 +204,7 @@ function mapStateToProps(state) {
         steam_profile: state.user.profile,
         users_list: state.users.list,
         random_teams: state.teams.current_generated_teams,
+        current_generated_tournament: state.tournament.current_generated_tournament,
     };
 }
 

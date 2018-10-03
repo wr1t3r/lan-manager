@@ -14,10 +14,19 @@ class Team extends React.Component {
 
         return (
             <div className="col-sm-4">
-                <div className="team">
-                    <div className="team-name">Team {this.props.players[Object.keys(this.props.players)[0]].username}</div>
-                    { players }
-                </div>
+                { this.props.players
+                    ? (
+                        <div className="team">
+                            <div className="team-name">Tím: {this.props.players[Object.keys(this.props.players)[0]].username}</div>
+                            { !this.props.noplayers && players }
+                        </div>
+                    )
+                    : (
+                        <div className="team undefined">
+                            <div className="team-name">Odpočinok</div>
+                        </div>
+                    )
+                }
             </div>
         );
     }
