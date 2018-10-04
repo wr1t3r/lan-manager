@@ -114,6 +114,7 @@ serve.listen(80,()=> {console.log("+++Gethyl Express Server with Socket Running!
 const connected_users = {};
 let current_teams = undefined;
 let current_tournament = undefined;
+let last_servers = "";
 io.on('connection', function (socket) {
 
     if(current_teams) {
@@ -121,6 +122,9 @@ io.on('connection', function (socket) {
     }
     if(current_tournament) {
         io.sockets.emit('generateTournament', {tournament: current_tournament});
+    }
+    if(last_servers != "") {
+        io.sockets.emit('setServersText', {server_text: last_servers});
     }
 
     socket.on('disconnect', function(){
@@ -154,6 +158,11 @@ io.on('connection', function (socket) {
     socket.on('generateTournament',(tournament)=>{
         current_tournament = tournament;
         io.sockets.emit('generateTournament', {tournament: tournament});
+    });
+
+    socket.on('setServersText',(server_text)=>{
+        last_servers = server_text;
+        io.sockets.emit('setServersText', {server_text: server_text});
     });
 });
 

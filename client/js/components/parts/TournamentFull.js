@@ -6,7 +6,12 @@ import Group from './Group';
 class TournamentFull extends React.Component {
     render() {
         const groups = map(this.props.matches, (group, key) =>
-            <Group key={key} data={group} />
+            <Group key={key}
+                   data={group}
+                   socket={this.props.socket}
+                   changeScore={this.props.changeScore}
+                   score={this.props.score}
+                   hide_controls={this.props.hide_controls}  />
         );
 
         return (<div className="full">

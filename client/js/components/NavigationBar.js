@@ -6,6 +6,7 @@ import {loginByToken, userLoggedIn} from '../actions/user';
 import {setGeneratedTeams} from '../actions/teams';
 import {setTournament} from '../actions/tournament';
 import {updateUsers} from "../actions/users";
+import {setServersTextLocal} from "../actions/servers";
 import Constants from "../data/Constants";
 
 class NavigationBar extends React.Component {
@@ -26,6 +27,10 @@ class NavigationBar extends React.Component {
 
         this.props.socket.on('generateTournament',(data)=>{
             this.props.setTournament(data.tournament);
+        });
+
+        this.props.socket.on('setServersText',(data)=>{
+            this.props.setServersTextLocal(data.server_text);
         });
     }
 
@@ -57,6 +62,11 @@ class NavigationBar extends React.Component {
                                 ( this.getMenuItem("Turnaj", "gears", "/admin") )
 
                         }
+                        {
+                            this.props.steam_id == Constants.admin_steam_id &&
+                                ( this.getMenuItem("Severy", "gears", "/adminservers") )
+
+                        }
                     </div>
                 </div>
             </nav>
@@ -76,6 +86,7 @@ function matchDispatchToProps(dispatch){
         updateUsers: updateUsers,
         setGeneratedTeams: setGeneratedTeams,
         setTournament: setTournament,
+        setServersTextLocal: setServersTextLocal,
     }, dispatch);
 }
 

@@ -4,6 +4,7 @@ import Home from './components/pages/Home';
 import Verify from './components/pages/Verify';
 import Logout from './components/pages/Logout';
 import Admin from './components/pages/admin/Admin';
+import AdminServers from './components/pages/admin/AdminServers';
 
 class Router extends React.Component {
     render() {
@@ -19,6 +20,9 @@ class Router extends React.Component {
         const SocketedAdmin = (props) => {
             return ( <Admin socket={this.props.socket} /> );
         };
+        const SocketedAdminServers = (props) => {
+            return ( <AdminServers socket={this.props.socket} /> );
+        };
 
         return (
             <div>
@@ -27,6 +31,7 @@ class Router extends React.Component {
                     <Route path='/verify' component={SocketedVerify} />
                     <Route exact path='/logout' component={SocketedLogout} />
                     <Route exact path='/admin' component={SocketedAdmin} />
+                    <Route exact path='/adminservers' component={SocketedAdminServers} />
                 </Switch>
             </div>
         );

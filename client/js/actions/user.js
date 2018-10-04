@@ -38,7 +38,9 @@ export function loadSteamProfileFromFirebase(socket) {
             messagingSenderId: ''
         };
 
-        firebase.initializeApp(config);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(config);
+        }
 
         const database = firebase.database();
 

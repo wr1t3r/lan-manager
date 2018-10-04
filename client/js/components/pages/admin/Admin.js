@@ -6,12 +6,13 @@ import {bindActionCreators} from "redux";
 import map from "lodash/map";
 import SteamProfileButton from '../../parts/SteamProfileButton';
 import {generateTeams, deleteGeneratedTeams} from "../../../actions/teams";
-import {generateTournament, deleteGeneratedTournament} from "../../../actions/tournament";
+import {generateTournament, deleteGeneratedTournament, loadTournaments, loadTournament, changeScore} from "../../../actions/tournament";
 import SelectAddon from '../../form/SelectAddon';
 import TextAddon from '../../form/TextAddon';
 import Team from '../../parts/Team';
 import Tournament from '../../../data/Tournament';
 import TournamentHolder from '../../parts/TournamentHolder';
+import Constants from "../../../data/Constants";
 
 class Admin extends React.Component {
     constructor(props) {
@@ -31,14 +32,24 @@ class Admin extends React.Component {
         this.deleteTeams = this.deleteTeams.bind(this);
         this.deleteTournament = this.deleteTournament.bind(this);
         this.generateTournament = this.generateTournament.bind(this);
+        this.loadTournament = this.loadTournament.bind(this);
     }
 
     componentDidMount() {
-
+        if(this.props.steam_id != Constants.admin_steam_id) {
+            this.context.router.history.push("/");
+        } else {
+            this.props.loadTournaments();
+        }
     }
 
     onChange(e) {
         this.setState({ [e.target.name]: e.target.value });
+    }
+
+    loadTournament(e, tournamentIndex) {
+        e.preventDefault();
+        this.props.loadTournament(this.props.socket, tournamentIndex);
     }
 
     clickUser(user) {
@@ -61,11 +72,11 @@ class Admin extends React.Component {
     generateTeams(e) {
         e.preventDefault();
 
-        //if(Object.keys(this.state.selected_players).length >= 2) {
+        if(Object.keys(this.state.selected_players).length >= 2) {
             this.props.generateTeams(this.props.socket, this.state.selected_players, this.state.num_players_per_team);
-        //} else {
-        //    alert('Vyber aspoň 2 hráčov.');
-        //}
+        } else {
+            alert('Vyber aspoň 2 hráčov.');
+        }
     }
 
     deleteTournament(e) {
@@ -76,11 +87,15 @@ class Admin extends React.Component {
     generateTournament(e) {
         e.preventDefault();
 
-        //if(this.props.random_teams.length >= 1) {
-            this.props.generateTournament(this.props.socket, this.state.tournament_type, this.state.num_groups, this.state.tournament_name);
-        //} else {
-            //alert('Musí byť aspoň jeden tým.');
-        //}
+        if(this.props.random_teams.length >= 1) {
+            if(this.state.tournament_name != "") {
+                this.props.generateTournament(this.props.socket, this.state.tournament_type, this.state.num_groups, this.state.tournament_name);
+            } else {
+                alert('Meno turnaja?');
+            }
+        } else {
+            alert('Musí byť aspoň jeden tým.');
+        }
     }
 
     render() {
@@ -105,6 +120,9 @@ class Admin extends React.Component {
         );
         const tournament_types = map(Tournament.getTournamentTypes(), (tournamentType, key) =>
             <option value={tournamentType.id} key={tournamentType.id}>{tournamentType.name}</option>
+        );
+        const tournament_list = map(this.props.tournament_list, (tournament, key) =>
+            <a key={key} href="#" onClick={ (e) => this.loadTournament(e, key) } className="tournament-list">{Object.keys(tournament)[0]}</a>
         );
 
         return (
@@ -154,6 +172,7 @@ class Admin extends React.Component {
                             <SelectAddon id="tournament_type"
                                          text="Typ turnaja"
                                          icon="angle-double-right"
+                                         property={this.state.tournament_type}
                                          onChange={this.onChange}
                                          option_values={tournament_types} />
                             { this.state.tournament_type == Tournament.TYPE_FULL && (
@@ -173,20 +192,25 @@ class Admin extends React.Component {
                                 </div>
                             )}
                             <hr />
-                            <a href="#" className="btn btn-success" onClick={this.generateTournament}><i className="fa fa-gear" /> Generovať</a>&nbsp;&nbsp;&nbsp;
+                            <a href="#" className="btn btn-success" onClick={this.generateTournament}><i className="fa fa-gear" /> Uložiť a zobraziť všetkým</a>&nbsp;&nbsp;&nbsp;
                             <a href="#" className="btn btn-danger" onClick={this.deleteTournament}><i className="fa fa-trash" /> Vymazať Generované</a>&nbsp;&nbsp;&nbsp;
-                            <a href="#" className="btn btn-warning"><i className="fa fa-save" /> Uložiť do DB</a>&nbsp;&nbsp;&nbsp;
 
                             <hr/>
 
                             { this.props.current_generated_tournament && (<TournamentHolder stage={1}
+                                                                                            teams={this.props.current_generated_tournament.teams}
+                                                                                            score={this.props.current_generated_tournament.score}
                                                                                             matches={this.props.current_generated_tournament.matches}
-                                                                                            tournament_type={this.props.current_generated_tournament.type} />)}
+                                                                                            tournament_type={this.props.current_generated_tournament.type}
+                                                                                            socket={this.props.socket}
+                                                                                            changeScore={this.props.changeScore}
+                                                                                            hide_controls={false} />)}
                         </div>
                     </div>
                     <div className="col-sm-4">
                         <h1 className="align-center">Turnaje</h1>
                         <hr />
+                        {tournament_list}
                     </div>
                 </div>
             </div>
@@ -205,6 +229,7 @@ function mapStateToProps(state) {
         users_list: state.users.list,
         random_teams: state.teams.current_generated_teams,
         current_generated_tournament: state.tournament.current_generated_tournament,
+        tournament_list: state.tournament.tournament_list,
     };
 }
 
@@ -215,6 +240,9 @@ function matchDispatchToProps(dispatch){
         deleteGeneratedTeams: deleteGeneratedTeams,
         generateTournament: generateTournament,
         deleteGeneratedTournament: deleteGeneratedTournament,
+        loadTournaments: loadTournaments,
+        loadTournament: loadTournament,
+        changeScore: changeScore,
     }, dispatch);
 }
 

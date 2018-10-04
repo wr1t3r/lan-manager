@@ -222,9 +222,65 @@ nav {
   .name {
     background: red;
   }
+  .group-table {
+    list-style: none;
+    border: 1px solid gray;
+    display: block;
+    padding: 0;
+    overflow: hidden;
+
+    li {
+      padding: 8px 10px;
+      display: block;
+      width: 100%;
+
+      span {
+        float: right;
+        font-size: 18px;
+
+        a {
+          color: red;
+        }
+      }
+    }
+    li:nth-child(odd) {
+      background: $steam_bg_blue_light;
+    }
+  }
 }
 .round {
   .name {
     background: transparent;
+  }
+}
+
+.tournament-list {
+  background: white;
+  display: inline-block;
+  text-align: center;
+  margin: 10px;
+  padding: 10px 20px;
+}
+
+.team-score {
+  text-align: right;
+  line-height: 30px;
+
+  a {
+    margin: 0 5px;
+    color: red;
+  }
+
+  span {
+    font-size: 18px;
+  }
+}
+
+.servers {
+  a {
+    color: red;
+    display: inline-block;
+    line-height: 30px;
+    font-size: 18px;
   }
 }

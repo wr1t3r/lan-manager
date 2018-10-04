@@ -14,19 +14,26 @@ class Home extends React.Component {
     }
 
     render() {
-        const teams = map(this.props.random_teams, (players, key) =>
-            <Team key={key} players={players} />
+        const score = this.props.current_generated_tournament.score;
+        const teams = map(this.props.current_generated_tournament.teams, (players, key) =>
+            <Team key={key} players={players} score={score} team_index={key} />
         );
 
         return (
             <div className="container">
                 <div className="row">
                     <div className="col-xs-3">
+                        { this.props.servers_text && this.props.servers_text != "" && (
+                            <div>
+                                <h1>Servery</h1>
+                                <p className="servers" dangerouslySetInnerHTML={{__html: this.props.servers_text}}></p>
+                            </div>
+                        )}
                         <h1>Online</h1>
                         <UsersPanel users_list={this.props.users_list} />
                     </div>
                     <div className="col-xs-9">
-                        { this.props.random_teams.length > 0 && (
+                        { this.props.current_generated_tournament.teams && (
                             <div>
                                 <h1>Tímy</h1>
                                 <div className="row">
@@ -42,7 +49,9 @@ class Home extends React.Component {
                                 <div className="row">
                                     <TournamentHolder stage={1}
                                         matches={this.props.current_generated_tournament.matches}
-                                        tournament_type={this.props.current_generated_tournament.type} />
+                                        score={this.props.current_generated_tournament.score}
+                                        tournament_type={this.props.current_generated_tournament.type}
+                                        hide_controls={true} />
                                 </div>
                                 <hr/>
                             </div>
@@ -66,6 +75,7 @@ function mapStateToProps(state) {
         users_list: state.users.list,
         random_teams: state.teams.current_generated_teams,
         current_generated_tournament: state.tournament.current_generated_tournament,
+        servers_text: state.servers.text,
     };
 }
 

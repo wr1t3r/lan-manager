@@ -9,6 +9,7 @@ class TournamentGenerator {
     }
 
     getTournament() {
+        /*
         this.teams = [
             {
                 76561198862409907: {
@@ -81,6 +82,7 @@ class TournamentGenerator {
                 }
             }
         ];
+        */
 
         if(this.tournament_type == Tournament.TYPE_FREE_FOR_ALL) {
             return this.getFreeForAll(this.teams);
